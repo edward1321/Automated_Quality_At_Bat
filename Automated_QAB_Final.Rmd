@@ -1,0 +1,26 @@
+
+```{r}
+data <- readRDS("/Users/kephi/Desktop/Wake Forest Baseball Analytcs/tmAll_ACCSEC copy.RDS")
+
+data <- data %>%
+  mutate(AB_end_true = lead(PitchofPA))
+
+data$PitchofPA <- as.numeric(data$PitchofPA)
+
+data$QAB <- ifelse(data$PlayResult == "Walk" |
+                     data$PlayResult == "HitByPitch" | 
+                     data$PlayResult == "Single" |
+                     data$PlayResult == "Double" |
+                     data$PlayResult == "Triple" |
+                     data$PlayResult == "HomeRun" | 
+                     data$PlayResult == "Sacrifice" & data$AB_Result == "Sacrifice (Bunt)" |
+                     data$AB_end_true == 1 & data$PitchofPA >= 7 & data$Swing == TRUE |
+                     data$AB_end_true == 1 & data$ExitSpeed >= 95.00000 & !is.na(data$ExitSpeed) |
+                     data$HitType == "FlyBall" & data$RunsScored >= 1, 1,0)
+
+  
+data$QAB <- as.factor(data$QAB)
+
+
+```
+
